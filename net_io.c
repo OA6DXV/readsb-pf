@@ -4241,7 +4241,12 @@ static int decodePfMessage(struct client *c, char *p, int remote, int64_t now, s
     if (Modes.debug_planefinder) {
         fprintf(stderr, "sec: %12lld ns: %12lld\n", (long long) seconds, (long long) nanoseconds);
     }
-    mm->timestamp = seconds * 1000000000LL + nanoseconds;
+    // PlaneFinder supplies Unix seconds plus a nanosecond fraction, while
+    // modesMessage timestamps (and normal Beast output) use a 12 MHz clock.
+    // Convert here so timestamps from every other input retain their native
+    // handling in netTimestamp(). Round the fractional part to the nearest
+    // tick; doing the two terms separately also avoids overflowing int64_t.
+    mm->timestamp = seconds * 12000000LL + (nanoseconds * 12LL + 500LL) / 1000LL;
 
     // record reception time as the time we read it.
     mm->sysTimestamp = now;
