@@ -1,5 +1,5 @@
 #!/bin/bash
-# postinst script for readsb
+# postinst script for readsb-pf
 #
 # see: dh_installdeb(1)
 
@@ -17,8 +17,8 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-NAME=readsb
-RUNAS=readsb
+NAME=readsb-pf
+RUNAS=readsb-pf
 CRONFILE=/etc/cron.d/$NAME
 TEMPLATECRON=/usr/share/$NAME/cron-template
 

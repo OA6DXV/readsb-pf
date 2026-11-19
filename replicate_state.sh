@@ -9,11 +9,11 @@ set -e
 
 # source
 SHOST=root@box1
-SDIR=/run/readsb
+SDIR=/run/readsb-pf
 
 # target
 THOST=root@box2
-TDIR=/run/readsb
+TDIR=/run/readsb-pf
 
 echo "$(date -u --rfc-3339=s) starting transfer from $SHOST to $THOST, 10 seconds to cancel with Ctrl-C"
 
@@ -35,7 +35,7 @@ TCMD="ssh $THOST $SSHCOMMON $SSHPERSIST $P2"
 
 if ! $SCMD "cd $SDIR/getState" || ! $TCMD "cd $TDIR/getState"; then
     echo "---------------------------------------------------------"
-    echo "ERROR: readsb version too old, use replicate_state_old.sh or update readsb to version >= v3.14.1618"
+    echo "ERROR: readsb-pf version too old, use replicate_state_old.sh or update readsb-pf to version >= v3.14.1618"
     echo "---------------------------------------------------------"
     exit 1
 fi
@@ -62,7 +62,7 @@ wait # wait for last transfer
 
 echo "$(date -u --rfc-3339=s) transfer done, waiting for completion of state load on the target side"
 $TCMD "while ls $RDIR | grep -qs -v -e tmp; do sleep 1; done"
-$TCMD "if ls $RDIR | grep -qs ${suffix}; then echo transfer or state loading incomplete, check target readsb log; else echo $(date -u --rfc-3339=s) state loading completed on target; fi"
+$TCMD "if ls $RDIR | grep -qs ${suffix}; then echo transfer or state loading incomplete, check target readsb-pf log; else echo $(date -u --rfc-3339=s) state loading completed on target; fi"
 $TCMD "rm -rf $RDIR $TTDIR"
 
 rm -rf "$SSHDIR"

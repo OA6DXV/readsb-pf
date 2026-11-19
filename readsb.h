@@ -64,8 +64,11 @@
 #endif
 
 #ifndef MODES_READSB_VARIANT
-#define MODES_READSB_VARIANT     "readsb"
+#define MODES_READSB_VARIANT     "readsb-pf"
 #endif
+
+#define VIEWADSB_NAME "viewadsb-pf"
+#define VIEWADSB_DEFAULT_PORT "31005"
 
 #define VERSION_STRING MODES_READSB_VARIANT " version: " MODES_READSB_VERSION
 

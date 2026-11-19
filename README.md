@@ -1,6 +1,6 @@
-# Readsb
+# readsb-pf
 
-This is a detached fork of https://github.com/Mictronics/readsb
+This fork of [wiedehopf/readsb](https://github.com/wiedehopf/readsb) supports the Plane Finder Radar stream.
 
 It's continually under development, expect bugs, segfaults and all the good stuff :)
 
@@ -12,16 +12,9 @@ see the LICENSE file for details
 
 ## how to install / build
 
-I'd recommend this script to automatically install it:
-- https://github.com/wiedehopf/adsb-scripts/wiki/Automatic-installation-for-readsb
-
-See the [Debian Package](#debian-package) section if you want to build the package yourself.
-
-Or check here on how to further install a webinterface and other useful stuff:
-- https://github.com/wiedehopf/adsb-wiki/wiki/Building-readsb-from-source
-- https://github.com/wiedehopf/adsb-wiki/wiki/Raspbian-Lite:-ADS-B-receiver
-
-For macOS build and info, check the [macOS](##macos) section
+Run `make` to build `./readsb-pf` and `./viewadsb-pf`. See
+[Building manually](#building-manually) for build options and
+[Debian package](#debian-package) for a systemd installation.
 
 ## Credits / history
 
@@ -37,7 +30,7 @@ wiedehopf (this fork of Mictronics readsb)
 
 ### Push server support
 
-readsb connects to a listening server.
+readsb-pf connects to a listening server.
 
 Sending beast data (beast_out):
 ```
@@ -60,7 +53,7 @@ This is used by some aggregators to aggregate ADS-B data, an example net connect
 ```
 The uuid is optional, if none is given, the uuid from --uuid-file is used, if that isn't present no uuid is sent.
 The beast_reduce_out net-connector will never send an uuid.
-The aggregator enables --net-receiver-id and --net-ingest on their readsb server, it's made to work with beast_reduce_plus_out.
+The aggregator enables --net-receiver-id and --net-ingest on their readsb-pf server, it's made to work with beast_reduce_plus_out.
 
 ## Debian package
 
@@ -71,8 +64,8 @@ sudo apt update
 sudo apt install --no-install-recommends --no-install-suggests -y \
     git build-essential debhelper libusb-1.0-0-dev pkg-config fakeroot \
     libncurses-dev zlib1g-dev libzstd-dev librtlsdr-dev help2man
-git clone --depth 20 https://github.com/wiedehopf/readsb.git
-cd readsb
+git clone --depth 20 https://github.com/OA6DXV/readsb-pf.git
+cd readsb-pf
 export DEB_BUILD_OPTIONS=noddebs
 rm -f ../readsb_*.deb
 dpkg-buildpackage -b -ui -uc -us --build-profiles=rtlsdr
@@ -114,7 +107,7 @@ The difference of using -Ofast or -O3 over the default of -O2 is likely very min
 
 ## Configuration
 
-If required, edit `/etc/default/readsb` to set the service options, device type, network ports etc.
+If required, edit `/etc/default/readsb-pf` to set the service options, device type, network ports etc.
 
 ## Autogain
 
@@ -135,7 +128,7 @@ There should be no need to tweak these parameters.
 
 ## rtl-sdr bias tee
 
-Use this utility independent of readsb:
+Use this utility independent of readsb-pf:
 https://github.com/wiedehopf/adsb-wiki/wiki/RTL-Bias-Tee
 
 ## Global map of aircraft
@@ -169,9 +162,9 @@ History function as used by several online aggregators using tar1090.
 Warning: the following will generate several thousand files a day and can use significant amounts of
 disk space depending on your data source.
 
-The following command line options need to be added to for example the decoder options in `/etc/default/readsb`
+The following command line options need to be added to for example the decoder options in `/etc/default/readsb-pf`
 ```
---write-globe-history /var/globe_history --heatmap 30
+--write-globe-history /var/lib/readsb-pf/globe_history --heatmap 30
 ```
 To increase time resolution to maximum, you can add `--json-trace-interval=0.1` which will add every
 position received to traces. The heatmap interval can also be reduced from the default of 30
@@ -179,25 +172,25 @@ seconds, i wouldn't recommend less than 5 seconds for that though.
 
 Aggregators will generally use `--write-json-globe-index` as well but that's not necessary if you don't have more than 500 concurrent planes.
 
-/var/globe_history needs to be a directory writeable by the user readsb.
-`sudo mkdir /var/globe_history` and `sudo chown readsb /var/globe_history` are useful for that.
+/var/lib/readsb-pf/globe_history needs to be a directory writeable by the user readsb-pf.
+`sudo mkdir -p /var/lib/readsb-pf/globe_history` and `sudo chown readsb-pf /var/lib/readsb-pf/globe_history` are useful for that.
 
 You should also download
 ```
 wget -O /usr/local/share/tar1090/aircraft.csv.gz https://github.com/wiedehopf/tar1090-db/raw/csv/aircraft.csv.gz
 ```
 
-and add this command line option (for exaple via /etc/default/readsb):
+and add this command line option (for exaple via /etc/default/readsb-pf):
 ```
 --db-file /usr/local/share/tar1090/aircraft.csv.gz
 ```
 
 This will obviously write data to the hard drive, be aware of that.
 The data format is subject to change, don't expect this to be stable.
-Be aware of that when upgrading either tar1090 or readsb to a new commit.
+Be aware of that when upgrading either tar1090 or readsb-pf to a new commit.
 
 If you're using --write-json-globe-index, it's also recommended to use --tar1090-use-api
-It will use the readsb API to get data, it's less requests and usually more efficient,
+It will use the readsb-pf API to get data, it's less requests and usually more efficient,
 for details see the file nginx-readsb-api.conf
 (this needs adding to your existing nginx tar1090 configuration, this is only for people who really know their stuff anyway)
 
@@ -207,11 +200,28 @@ there.
 
 ## non-SDR data source
 
-If you don't want readsb to read data from the SDR, you'll also need to change the receiver options line to something like this:
+If you don't want readsb-pf to read data from the SDR, you'll also need to change the receiver options line to something like this:
 ```
 RECEIVER_OPTIONS="--net-only --net-connector 192.168.2.7,30005,beast_in"
 ```
-If you have another dump1090/readsb running on the same machine, you'll also need to change all the ports to avoid conflicts.
+The Debian package uses `readsb-pf.service`, the `readsb-pf` system user,
+`/etc/default/readsb-pf`, and `/run/readsb-pf`. Its default TCP ports are
+31001 (AVR input), 31002 (AVR output), 31003 (SBS output), 31004 and
+31104 (Beast input), and 31005 (Beast output). `viewadsb-pf` connects to
+localhost:31005 by default. For parallel operation, assign distinct ports
+and data paths to any custom configuration and use separate SDRs or run
+one receiver in network-only mode.
+
+For a Plane Finder Radar TCP source, set the receiver options in
+`/etc/default/readsb-pf` using your source host and port:
+
+```sh
+RECEIVER_OPTIONS="--net-only --net-connector RADAR_HOST,RADAR_PORT,planefinder_in"
+```
+
+Prometheus metrics use the `readsb_pf_` prefix. With `include_version`,
+the HTTP API returns the `readsb-pf-version` header. The receiver JSON
+retains the `readsb` compatibility flag for tar1090.
 
 
 ## --debug=S: speed check debugging output
@@ -257,10 +267,10 @@ you'll have to update, just disabled the MLAT speed check from displayign stuff 
 
 Thank you to https://github.com/ind006/readsb_macos/ for all the shims needed to make this work.
 
-readsb should be (largely) compatible with macOS, on both Intel and ARM architectures.
+readsb-pf should be (largely) compatible with macOS, on both Intel and ARM architectures.
 
-There is a recipe for homebrew avalailable: https://formulae.brew.sh/formula/readsb
-Run `brew install readsb` to install readsb using homebrew.
+There is a recipe for homebrew avalailable: https://formulae.brew.sh/formula/readsb-pf
+Run `brew install readsb-pf` to install readsb-pf using homebrew.
 
 Or compile manually roughly like this:
 You may need to modify the Makefile to point at where on your mac you have the standard libs and includes installed.
@@ -276,10 +286,10 @@ Build using:
 make -j4 RTLSDR=yes
 ```
 
-You can run it from the command line (try `screen -S readsb` and run it in there, press ctrl-A to detach the terminal)
+You can run it from the command line (try `screen -S readsb-pf` and run it in there, press ctrl-A to detach the terminal)
 Example command line:
 ```sh
-./readsb --quiet --net --device-type rtlsdr --gain auto
+./readsb-pf --quiet --net --device-type rtlsdr --gain auto
 # add console table of planes for a quick test:
 --interactive
 # optionally add coordinates:
@@ -290,7 +300,7 @@ Example command line:
 # optional database info
 --db-file ~/tar1090/aircraft.csv.gz
 # optional listen ports:
---net-ri-port 30001 --net-ro-port 30002 --net-sbs-port 30003 --net-bi-port 30004,30104 --net-bo-port 30005
+--net-ri-port 31001 --net-ro-port 31002 --net-sbs-port 31003 --net-bi-port 31004,31104 --net-bo-port 31005
 # optional sending of data to an aggregator:
 --net-connector feed.flyrealtraffic.com,30004,beast_reduce_plus_out,7817bd08-f226-11ef-ba9e-072eee452592
 ```
@@ -336,7 +346,7 @@ location /tar1090 {
 ```
 
 An easy way to add some traces when selecting a plane (with nginx):
-Add `--write-globe-history=/home/USER/readsb_history` to the readsb command line.
+Add `--write-globe-history=/home/USER/readsb_history` to the readsb-pf command line.
 You can also serve this folder as /tar1090/globe_history but that's only required for the history going back further
 than 24h.
 
@@ -344,13 +354,13 @@ The classical tar1090 uses traces created via a shell script and served at /tar1
 script is probably a hassle, so just use the above.
 
 
-## readsb --help
+## readsb-pf --help
 
 might be out of date, check the command on a freshly compiled version
 
 ```
-Usage: readsb [OPTIONS...] 
-readsb Mode-S/ADSB/TIS Receiver   
+Usage: readsb-pf [OPTIONS...]
+readsb-pf Mode-S/ADSB/TIS Receiver
 Build options: ENABLE_RTLSDR 
 
 
@@ -408,7 +418,7 @@ General options:
   --write-receiver-id-json                                       Write receivers.json
   --json-trace-interval=<seconds>                                Interval after which a new position will guaranteed to be written to the trace and the json position output (default: 30)
   --json-trace-hist-only=1,2,3,8                                 Don't write recent(1), full(2), either(3) traces to /run, only archive via write-globe-history (8: irregularly write limited traces to run, subject to change)
-  --full-trace-dir=<dir>                                         when using globe-index, write full traces to this directory instead of --write-json dir (typically /run/readsb), this can be used to reduce memory usage at the cost of roughly 100 IOPS for global traffic
+  --full-trace-dir=<dir>                                         when using globe-index, write full traces to this directory instead of --write-json dir (typically /run/readsb-pf), this can be used to reduce memory usage at the cost of roughly 100 IOPS for global traffic
   --write-json-gzip                                              Write aircraft.json also as aircraft.json.gz
   --write-json-binCraft-only=<n>                                 Use only binary binCraft format for globe files (1), for aircraft.json as well (2)
   --write-binCraft-old                                           write old gzipped binCraft files
@@ -444,7 +454,7 @@ Network options:
   --net-json-port-include-noposition                             TCP json position output: include aircraft without position (state is sent for aircraft for every DF11 with CRC if the aircraft hasn't sent a position in the last 10 seconds and interval allowing)
   --net-api-port=<port>                                          http API listen port (in contrast to other listeners, only a single port is allowed) (update frequency controlled by write-json-every parameter) (default: 0)
   --api-shutdown-delay=<seconds>                                 Shutdown delay to server remaining API queries, new queries get a 503 response (default: 0)
-  --tar1090-use-api                                              when running with globe-index, signal tar1090 use the readsb API to get data, requires webserver mapping of /tar1090/re-api to proxy_pass the requests to the --net-api-port, see nginx-readsb-api.conf in the tar1090 repository for details
+  --tar1090-use-api                                              when running with globe-index, signal tar1090 use the readsb-pf API to get data, requires webserver mapping of /tar1090/re-api to proxy_pass the requests to the --net-api-port, see nginx-readsb-api.conf in the tar1090 repository for details
   --net-beast-reduce-out-port=<ports>                            TCP BeastReduce output listen port / TCP server (default: 0)
   --net-beast-reduce-interval=<seconds>                          BeastReduce data update interval, longer means less data (default: 0.250, valid range: 0.000 - 14.999)
   --net-beast-reduce-optimize-for-mlat                           BeastReduce output: keep all messages relevant to mlat-client

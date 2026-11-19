@@ -6,7 +6,7 @@ while true; do
     date -u
     date
     sleep 5 &
-    gdb --pid "$(pgrep -f readsb)" \
+    gdb --pid "$(pgrep -x readsb-pf)" \
         -ex 'handle SIGTERM nostop print pass' \
         -ex 'handle SIGINT nostop print pass' \
         -ex 'handle SIGCONT nostop print pass' \

@@ -69,7 +69,7 @@
 // Creating a 5 minute sample with a gain of 43.9:
 // timeout 300 rtl_sdr -f 1090000000 -s 2400000 -g 43.9 sample.dat
 // Checking a set of correlation functions using the above sample:
-// make && ./readsb --device-type ifile --ifile sample.dat --quiet --stats
+// make && ./readsb-pf --device-type ifile --ifile sample.dat --quiet --stats
 
 static inline __attribute__((always_inline)) int slice_phase0(uint16_t *m) {
     return 18 * m[0] - 15 * m[1] - 3 * m[2];

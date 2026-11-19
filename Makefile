@@ -1,5 +1,6 @@
-PROGNAME=readsb
-READSB_VERSION := "$(shell printf '%s' `cat version`; { git show -s --format=format: && printf '%s' ' wiedehopf git: ' && git describe --tags --abbrev --dirty --always && git show -s --format=format:"(committed: %cd)" | tr -cd '[a-z],[A-Z],[0-9],:, ,\-,_,(,)';} || printf '%s' ' compiled on '`date +%y%m%d` )"
+PROGNAME = readsb-pf
+VIEWER = viewadsb-pf
+READSB_VERSION := "$(shell printf '%s' `cat version`; { git show -s --format=format: && printf '%s' ' git: ' && git describe --tags --abbrev --dirty --always && git show -s --format=format:"(committed: %cd)" | tr -cd '[a-z],[A-Z],[0-9],:, ,\-,_,(,)';} || printf '%s' ' compiled on '`date +%y%m%d` )"
 
 RTLSDR ?= no
 BLADERF ?= no
@@ -174,7 +175,7 @@ endif
 # add custom overrides if user defines them
 CFLAGS += -g $(OPTIMIZE)
 
-all: readsb viewadsb
+all: $(PROGNAME) $(VIEWER)
 
 ifneq ($(shell cat .version 2>/dev/null),prefix $(READSB_VERSION))
 .PHONY: .version
@@ -188,19 +189,19 @@ readsb.o: readsb.c *.h .version
 %.o: %.c *.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-readsb: readsb.o argp.o anet.o interactive.o mode_ac.o mode_s.o comm_b.o json_out.o net_io.o crc.o demod_2400.o \
+$(PROGNAME): readsb.o argp.o anet.o interactive.o mode_ac.o mode_s.o comm_b.o json_out.o net_io.o crc.o demod_2400.o \
 	uat2esnt/uat2esnt.o uat2esnt/uat_decode.o \
 	stats.o cpr.o icao_filter.o track.o util.o fasthash.o convert.o sdr_ifile.o sdr_beast.o sdr.o ais_charset.o \
 	globe_index.o geomag.o receiver.o aircraft.o api.o threadpool.o \
 	$(SDR_OBJ) $(COMPAT)
 	$(CC) -o $@ $^ $(LDFLAGS) $(LIBS) $(LIBS_SDR) $(OPTIMIZE)
 
-viewadsb: readsb
-	rm -f viewadsb
-	cp readsb viewadsb
+$(VIEWER): $(PROGNAME)
+	rm -f $@
+	cp $< $@
 
 clean:
-	rm -f *.o uat2esnt/*.o oneoff/*.o compat/clock_gettime/*.o compat/clock_nanosleep/*.o compat/apple/*.o readsb viewadsb cprtests crctests oneoff/convert_benchmark
+	rm -f *.o uat2esnt/*.o oneoff/*.o compat/clock_gettime/*.o compat/clock_nanosleep/*.o compat/apple/*.o $(PROGNAME) $(VIEWER) cprtests crctests oneoff/convert_benchmark
 
 test: cprtest crctest
 

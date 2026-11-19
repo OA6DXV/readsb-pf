@@ -251,7 +251,7 @@ static void configSetDefaults(void) {
         uint64_t limit = limits.rlim_cur;
         // check limit for unreasonableness
         if (limit < (uint64_t) 64) {
-            fprintf(stderr, "WARNING: getrlimit(RLIMIT_NOFILE, &limits) returned less than 64 fds for readsb to work with. Assuming bad limit query function, using up to 64 file descriptors. Fix RLIMIT!\n");
+            fprintf(stderr, "WARNING: getrlimit(RLIMIT_NOFILE, &limits) returned less than 64 fds for " MODES_READSB_VARIANT " to work with. Assuming bad limit query function, using up to 64 file descriptors. Fix RLIMIT!\n");
             Modes.max_fds = 64;
         } else if (limits.rlim_cur == RLIM_INFINITY) {
             Modes.max_fds = INT32_MAX;
@@ -2457,7 +2457,9 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
 
 int parseCommandLine(int argc, char **argv) {
     // check if we are running as viewadsb and set according behaviour
-    if (strstr(argv[0], "viewadsb")) {
+    const char *program = strrchr(argv[0], '/');
+    program = program ? program + 1 : argv[0];
+    if (!strcmp(program, VIEWADSB_NAME) || !strcmp(program, VIEWADSB_NAME "-uuid")) {
         Modes.viewadsb = 1;
         Modes.net = 1;
         Modes.sdr_type = SDR_NONE;
@@ -2468,7 +2470,7 @@ int parseCommandLine(int argc, char **argv) {
 #endif
         Modes.net_connector_delay = 5 * 1000;
         // let this get overwritten in case the command line specifies a net-connector
-        make_net_connector("127.0.0.1,30005,beast_in");
+        make_net_connector("127.0.0.1," VIEWADSB_DEFAULT_PORT ",beast_in");
         Modes.net_connectors_count--;
         // we count it back up if it's still zero after the arg parse so it's used
     }
@@ -2476,7 +2478,7 @@ int parseCommandLine(int argc, char **argv) {
     // This is a little silly, but that's how the preprocessor works..
 #define _stringize(x) #x
 
-    const char *doc = "readsb Mode-S/ADSB/TIS Receiver   "
+    const char *doc = MODES_READSB_VARIANT " Mode-S/ADSB/TIS Receiver   "
         "\nBuild options: "
 #ifdef ENABLE_RTLSDR
         "ENABLE_RTLSDR "
@@ -2500,9 +2502,9 @@ int parseCommandLine(int argc, char **argv) {
 #undef verstring
 
     if (Modes.viewadsb) {
-        doc = "vieadsb Mode-S/ADSB/TIS commandline viewer "
-            "\n\nBy default, viewadsb will TCP connect to 127.0.0.1:30005 as a data source."
-            "\nTypical readsb / dump1090 installs will provide beast data on port 30005."
+        doc = VIEWADSB_NAME " Mode-S/ADSB/TIS commandline viewer "
+            "\n\nBy default, " VIEWADSB_NAME " will TCP connect to 127.0.0.1:" VIEWADSB_DEFAULT_PORT " as a data source."
+            "\nTo use readsb or dump1090 on port 30005, pass --net-connector 127.0.0.1,30005,beast_in."
             ;
     }
 
@@ -2512,7 +2514,7 @@ int parseCommandLine(int argc, char **argv) {
     struct argp argp = {options, parse_opt, args_doc, doc, NULL, NULL, NULL};
 
     if (argp_parse(&argp, argc, argv, ARGP_NO_EXIT, 0, 0)) {
-        fprintf(stderr, "Error parsing the given command line parameters, check readsb --usage and readsb --help for valid parameters.\n");
+        fprintf(stderr, "Error parsing the given command line parameters, check %s --usage and %s --help for valid parameters.\n", program, program);
         print_commandline(argc, argv);
         cleanup_and_exit(1);
     }
@@ -2530,9 +2532,9 @@ int parseCommandLine(int argc, char **argv) {
     print_commandline(argc, argv);
 
     if (Modes.viewadsb) {
-        log_with_timestamp("viewadsb starting up.");
+        log_with_timestamp(VIEWADSB_NAME " starting up.");
     } else {
-        log_with_timestamp("readsb starting up.");
+        log_with_timestamp(MODES_READSB_VARIANT " starting up.");
     }
     fprintf(stderr, VERSION_STRING"\n");
 
@@ -2723,7 +2725,7 @@ static void configAfterParse() {
         if (Modes.net)
             Modes.net_only = 1;
         if (!Modes.net_only) {
-            fprintf(stderr, "No networking or SDR input selected, exiting! Try '--device-type rtlsdr'! See 'readsb --help'\n");
+            fprintf(stderr, "No networking or SDR input selected, exiting! Try '--device-type rtlsdr'! See '" MODES_READSB_VARIANT " --help'\n");
             cleanup_and_exit(1);
         }
     } else if (Modes.sdr_type == SDR_MODESBEAST || Modes.sdr_type == SDR_GNS) {
@@ -3310,7 +3312,7 @@ int main(int argc, char **argv) {
 
 
         if (elapsed0 > 10 * SECONDS) {
-            fprintf(stderr, "<3> readsb was suspended for more than 5 seconds, this isn't healthy you know!\n");
+            fprintf(stderr, "<3> " MODES_READSB_VARIANT " was suspended for more than 5 seconds, this isn't healthy you know!\n");
         } else {
             if (elapsed1 > 60 * SECONDS && !Modes.synthetic_now) {
                 fprintf(stderr, "<3>FATAL: priorityTasksRun() interval %.1f seconds! Trying for an orderly shutdown as well as possible!\n", (double) elapsed1 / SECONDS);

@@ -1,7 +1,7 @@
 The api-port is best used with nginx and a unix socket:
 
 ```
-readsb [...] --net-api-port unix:/run/readsb/api.sock
+readsb-pf [...] --net-api-port unix:/run/readsb-pf/api.sock
 ```
 
 nginx location:
@@ -12,7 +12,7 @@ location /re-api/ {
     proxy_max_temp_file_size 0;
     proxy_set_header Connection $http_connection;
     proxy_set_header Host $http_host;
-    proxy_pass http://unix:/run/readsb/api.sock:/$is_args$args;
+    proxy_pass http://unix:/run/readsb-pf/api.sock:/$is_args$args;
 }
 ```
 

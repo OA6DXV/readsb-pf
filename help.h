@@ -53,7 +53,7 @@ static struct argp_option optionsViewadsb[] = {
     {"quiet", OptQuiet, 0, 0, "Disable output (default)", 1},
     {"debug", OptDebug, "<flags>", 0, "Debug mode (verbose), n: network, P: CPR, S: speed check", 1},
     {0,0,0,0, "Network options:", 2},
-    {"net-connector", OptNetConnector, "<IP,PORT,protocol>", 0, "connect as TCP client to listen port / TCP server at IP and PORT, can be specified multiple times (viewadsb default: --net-connector 127.0.0.1,30005,beast_in viewadsb first usage overrides default, second usage adds another input/output) Protocols: beast_out, beast_reduce_out, beast_reduce_plus_out, beast_in, raw_out, raw_in, sbs_in, sbs_in_jaero, sbs_out, sbs_out_jaero, vrs_out, json_out, gpsd_in, uat_in, uat_replay_out, planefinder_in, asterix_in, asterix_out (one failover ip/address,port can be specified: primary-address,primary-port,protocol,failover-address,failover-port) (any position in the comma separated list can also be either silent_fail or uuid=<uuid>)", 2},
+    {"net-connector", OptNetConnector, "<IP,PORT,protocol>", 0, "connect as TCP client to listen port / TCP server at IP and PORT, can be specified multiple times (" VIEWADSB_NAME " default: --net-connector 127.0.0.1," VIEWADSB_DEFAULT_PORT ",beast_in; first usage overrides default, second usage adds another input/output) Protocols: beast_out, beast_reduce_out, beast_reduce_plus_out, beast_in, raw_out, raw_in, sbs_in, sbs_in_jaero, sbs_out, sbs_out_jaero, vrs_out, json_out, gpsd_in, uat_in, uat_replay_out, planefinder_in, asterix_in, asterix_out (one failover ip/address,port can be specified: primary-address,primary-port,protocol,failover-address,failover-port) (any position in the comma separated list can also be either silent_fail or uuid=<uuid>)", 2},
     {0,0,0,0, "Help options:", 100},
     { 0 }
 };
@@ -117,7 +117,7 @@ static struct argp_option optionsReadsb[] = {
     {"write-receiver-id-json", OptNetReceiverIdJson, 0, 0, "Write receivers.json", 1},
     {"json-trace-interval", OptJsonTraceInt, "<seconds>", 0, "Interval after which a new position will guaranteed to be written to the trace and the json position output (default: 30)", 1},
     {"json-trace-hist-only", OptJsonTraceHistOnly, "1,2,3,8", 0, "Don't write recent(1), full(2), either(3) traces to /run, only archive via write-globe-history (8: irregularly write limited traces to run, subject to change)", 1},
-    {"full-trace-dir", OptFullTraceDir, "<dir>", 0, "when using globe-index, write full traces to this directory instead of --write-json dir (typically /run/readsb), this can be used to reduce memory usage at the cost of roughly 100 IOPS for global traffic", 1},
+    {"full-trace-dir", OptFullTraceDir, "<dir>", 0, "when using globe-index, write full traces to this directory instead of --write-json dir (typically /run/readsb-pf), this can be used to reduce memory usage at the cost of roughly 100 IOPS for global traffic", 1},
     {"write-json-gzip", OptJsonGzip, 0, 0, "Write aircraft.json also as aircraft.json.gz", 1},
     {"write-json-binCraft-only", OptJsonOnlyBin, "<n>", 0, "Use only binary binCraft format for globe files (1), for aircraft.json as well (2)", 1},
     {"write-binCraft-old", OptEnableBinGz, 0, 0, "write old gzipped binCraft files\n", 1},
@@ -153,7 +153,7 @@ static struct argp_option optionsReadsb[] = {
     {"net-json-port-wind-triggered", OptNetJsonPortWindTriggered, 0, 0, "TCP json position output: instead of emitting when a new position is calculated, only emit when the wind was calculated now based on data from the last 2.5 seconds and the position is no older than 2.5 seconds", 2},
     {"net-api-port", OptNetApiPorts, "<port>", 0, "http API listen port (in contrast to other listeners, only a single port is allowed) (update frequency controlled by write-json-every parameter) (default: 0)", 2},
     {"api-shutdown-delay", OptApiShutdownDelay, "<seconds>", 0, "Shutdown delay to server remaining API queries, new queries get a 503 response (default: 0)", 2},
-    {"tar1090-use-api", OptTar1090UseApi, 0, 0, "when running with globe-index, signal tar1090 use the readsb API to get data, requires webserver mapping of /tar1090/re-api to proxy_pass the requests to the --net-api-port, see nginx-readsb-api.conf in the tar1090 repository for details", 2},
+    {"tar1090-use-api", OptTar1090UseApi, 0, 0, "when running with globe-index, signal tar1090 use the readsb-pf API to get data, requires webserver mapping of /tar1090/re-api to proxy_pass the requests to the --net-api-port, see nginx-readsb-api.conf in the tar1090 repository for details", 2},
     {"net-beast-reduce-out-port", OptNetBeastReducePorts, "<ports>", 0, "TCP BeastReduce output listen port / TCP server (default: 0)", 2},
     {"net-beast-reduce-interval", OptNetBeastReduceInterval, "<seconds>", 0, "BeastReduce data update interval, longer means less data (default: 0.250, valid range: 0.000 - 14.999)", 2},
     {"net-beast-reduce-optimize-for-mlat", OptNetBeastReduceOptimizeMlat, 0, 0, "BeastReduce output: keep all messages relevant to mlat-client", 2},

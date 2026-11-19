@@ -145,7 +145,7 @@ bool beastOpen(void) {
     if (Modes.beast_fd < 0) {
         fprintf(stderr, "Failed to open serial device %s: %s\n",
                 Modes.beast_serial, strerror(errno));
-        fprintf(stderr, "In case of permission denied try: sudo chmod a+rw %s\nor permanent permission: sudo adduser readsb dialout\n", Modes.beast_serial);
+        fprintf(stderr, "In case of permission denied try: sudo chmod a+rw %s\nor permanent permission: sudo adduser " MODES_READSB_VARIANT " dialout\n", Modes.beast_serial);
         return false;
     }
 

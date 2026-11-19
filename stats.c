@@ -660,13 +660,13 @@ struct char_buffer generateStatusProm(int64_t now) {
 
     struct statsCount *sC = &(Modes.globalStatsCount);
 
-    p = safe_snprintf(p, end, "readsb_now %"PRIu64"\n", now);
-    p = safe_snprintf(p, end, "readsb_uptime %"PRIu64"\n", getUptime());
+    p = safe_snprintf(p, end, "readsb_pf_now %"PRIu64"\n", now);
+    p = safe_snprintf(p, end, "readsb_pf_uptime %"PRIu64"\n", getUptime());
 
-    p = safe_snprintf(p, end, "readsb_aircraft_with_position %u\n", sC->readsb_aircraft_with_position);
-    p = safe_snprintf(p, end, "readsb_aircraft_without_position %u\n", sC->readsb_aircraft_total - sC->readsb_aircraft_with_position);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_with_position %u\n", sC->readsb_aircraft_with_position);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_without_position %u\n", sC->readsb_aircraft_total - sC->readsb_aircraft_with_position);
     for (int i = 0; i < NUM_TYPES; i++) {
-        p = safe_snprintf(p, end, "readsb_aircraft_%s %u\n", addrtype_enum_string(i), sC->type_counts[i]);
+        p = safe_snprintf(p, end, "readsb_pf_aircraft_%s %u\n", addrtype_enum_string(i), sC->type_counts[i]);
     }
 
     if (p >= end)
@@ -746,91 +746,91 @@ struct char_buffer generatePromFile(int64_t now) {
 
     struct statsCount *sC = &(Modes.globalStatsCount);
 
-    p = safe_snprintf(p, end, "readsb_aircraft_adsb_version_zero %u\n", sC->readsb_aircraft_adsb_version_0);
-    p = safe_snprintf(p, end, "readsb_aircraft_adsb_version_one %u\n", sC->readsb_aircraft_adsb_version_1);
-    p = safe_snprintf(p, end, "readsb_aircraft_adsb_version_two %u\n", sC->readsb_aircraft_adsb_version_2);
-    p = safe_snprintf(p, end, "readsb_aircraft_emergency %u\n", sC->readsb_aircraft_emergency);
-    p = safe_snprintf(p, end, "readsb_aircraft_rssi_average %.1f\n", sC->readsb_aircraft_rssi_average);
-    p = safe_snprintf(p, end, "readsb_aircraft_rssi_min %.1f\n", sC->readsb_aircraft_rssi_min);
-    p = safe_snprintf(p, end, "readsb_aircraft_rssi_quart1 %.1f\n", sC->readsb_aircraft_rssi_quart1);
-    p = safe_snprintf(p, end, "readsb_aircraft_rssi_median %.1f\n", sC->readsb_aircraft_rssi_median);
-    p = safe_snprintf(p, end, "readsb_aircraft_rssi_quart3 %.1f\n", sC->readsb_aircraft_rssi_quart3);
-    p = safe_snprintf(p, end, "readsb_aircraft_rssi_max %.1f\n", sC->readsb_aircraft_rssi_max);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_adsb_version_zero %u\n", sC->readsb_aircraft_adsb_version_0);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_adsb_version_one %u\n", sC->readsb_aircraft_adsb_version_1);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_adsb_version_two %u\n", sC->readsb_aircraft_adsb_version_2);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_emergency %u\n", sC->readsb_aircraft_emergency);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_rssi_average %.1f\n", sC->readsb_aircraft_rssi_average);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_rssi_min %.1f\n", sC->readsb_aircraft_rssi_min);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_rssi_quart1 %.1f\n", sC->readsb_aircraft_rssi_quart1);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_rssi_median %.1f\n", sC->readsb_aircraft_rssi_median);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_rssi_quart3 %.1f\n", sC->readsb_aircraft_rssi_quart3);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_rssi_max %.1f\n", sC->readsb_aircraft_rssi_max);
 
-    p = safe_snprintf(p, end, "readsb_aircraft_total %u\n", sC->readsb_aircraft_total);
-    p = safe_snprintf(p, end, "readsb_aircraft_with_flight_number %u\n", sC->readsb_aircraft_with_flight_number);
-    p = safe_snprintf(p, end, "readsb_aircraft_without_flight_number %u\n", sC->readsb_aircraft_without_flight_number);
-    p = safe_snprintf(p, end, "readsb_aircraft_with_position %u\n", sC->readsb_aircraft_with_position);
-    p = safe_snprintf(p, end, "readsb_aircraft_without_position %u\n", sC->readsb_aircraft_total - sC->readsb_aircraft_with_position);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_total %u\n", sC->readsb_aircraft_total);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_with_flight_number %u\n", sC->readsb_aircraft_with_flight_number);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_without_flight_number %u\n", sC->readsb_aircraft_without_flight_number);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_with_position %u\n", sC->readsb_aircraft_with_position);
+    p = safe_snprintf(p, end, "readsb_pf_aircraft_without_position %u\n", sC->readsb_aircraft_total - sC->readsb_aircraft_with_position);
 
     for (int i = 0; i < NUM_TYPES; i++) {
-        p = safe_snprintf(p, end, "readsb_aircraft_%s %u\n", addrtype_enum_string(i), sC->type_counts[i]);
+        p = safe_snprintf(p, end, "readsb_pf_aircraft_%s %u\n", addrtype_enum_string(i), sC->type_counts[i]);
     }
-    p = safe_snprintf(p, end, "readsb_cpr_airborne %u\n", st->cpr_airborne);
-    p = safe_snprintf(p, end, "readsb_cpr_surface %u\n", st->cpr_surface);
+    p = safe_snprintf(p, end, "readsb_pf_cpr_airborne %u\n", st->cpr_airborne);
+    p = safe_snprintf(p, end, "readsb_pf_cpr_surface %u\n", st->cpr_surface);
 
-    p = safe_snprintf(p, end, "readsb_cpr_global_ok %u\n", st->cpr_global_ok);
-    p = safe_snprintf(p, end, "readsb_cpr_global_bad %u\n", st->cpr_global_bad);
-    p = safe_snprintf(p, end, "readsb_cpr_global_bad_range %u\n", st->cpr_global_range_checks);
-    p = safe_snprintf(p, end, "readsb_cpr_global_bad_speed %u\n", st->cpr_global_speed_checks);
-    p = safe_snprintf(p, end, "readsb_cpr_global_skipped %u\n", st->cpr_global_skipped);
+    p = safe_snprintf(p, end, "readsb_pf_cpr_global_ok %u\n", st->cpr_global_ok);
+    p = safe_snprintf(p, end, "readsb_pf_cpr_global_bad %u\n", st->cpr_global_bad);
+    p = safe_snprintf(p, end, "readsb_pf_cpr_global_bad_range %u\n", st->cpr_global_range_checks);
+    p = safe_snprintf(p, end, "readsb_pf_cpr_global_bad_speed %u\n", st->cpr_global_speed_checks);
+    p = safe_snprintf(p, end, "readsb_pf_cpr_global_skipped %u\n", st->cpr_global_skipped);
 
-    p = safe_snprintf(p, end, "readsb_cpr_local_ok %u\n", st->cpr_local_ok);
-    p = safe_snprintf(p, end, "readsb_cpr_local_aircraft_relative %u\n", st->cpr_local_aircraft_relative);
-    p = safe_snprintf(p, end, "readsb_cpr_local_receiver_relative %u\n", st->cpr_local_receiver_relative);
-    p = safe_snprintf(p, end, "readsb_cpr_local_bad_range %u\n", st->cpr_local_range_checks);
-    p = safe_snprintf(p, end, "readsb_cpr_local_bad_speed %u\n", st->cpr_local_speed_checks);
-    p = safe_snprintf(p, end, "readsb_cpr_local_skipped %u\n", st->cpr_local_skipped);
+    p = safe_snprintf(p, end, "readsb_pf_cpr_local_ok %u\n", st->cpr_local_ok);
+    p = safe_snprintf(p, end, "readsb_pf_cpr_local_aircraft_relative %u\n", st->cpr_local_aircraft_relative);
+    p = safe_snprintf(p, end, "readsb_pf_cpr_local_receiver_relative %u\n", st->cpr_local_receiver_relative);
+    p = safe_snprintf(p, end, "readsb_pf_cpr_local_bad_range %u\n", st->cpr_local_range_checks);
+    p = safe_snprintf(p, end, "readsb_pf_cpr_local_bad_speed %u\n", st->cpr_local_speed_checks);
+    p = safe_snprintf(p, end, "readsb_pf_cpr_local_skipped %u\n", st->cpr_local_skipped);
 
-    p = safe_snprintf(p, end, "readsb_cpr_filtered %u\n", st->cpr_filtered);
+    p = safe_snprintf(p, end, "readsb_pf_cpr_filtered %u\n", st->cpr_filtered);
 
 #define CPU_MILLIS(x) ((unsigned long long) st->x##_cpu.tv_sec * 1000UL + st->x##_cpu.tv_nsec / 1000000UL)
-    p = safe_snprintf(p, end, "readsb_cpu_background %llu\n", CPU_MILLIS(background));
-    p = safe_snprintf(p, end, "readsb_cpu_demod %llu\n", CPU_MILLIS(demod));
-    p = safe_snprintf(p, end, "readsb_cpu_reader %llu\n", CPU_MILLIS(reader));
-    p = safe_snprintf(p, end, "readsb_cpu_aircraft_json %llu\n", CPU_MILLIS(aircraft_json));
-    p = safe_snprintf(p, end, "readsb_cpu_globe_json %llu\n", CPU_MILLIS(globe_json));
-    p = safe_snprintf(p, end, "readsb_cpu_binCraft %llu\n", CPU_MILLIS(bin));
-    p = safe_snprintf(p, end, "readsb_cpu_heatmap_and_state %llu\n", CPU_MILLIS(heatmap_and_state));
-    p = safe_snprintf(p, end, "readsb_cpu_remove_stale %llu\n", CPU_MILLIS(remove_stale));
-    p = safe_snprintf(p, end, "readsb_cpu_trace_json %llu\n", trace_json_cpu_millis_sum);
-    p = safe_snprintf(p, end, "readsb_cpu_api_update %llu\n", CPU_MILLIS(api_update));
-    p = safe_snprintf(p, end, "readsb_cpu_api_workers %llu\n", CPU_MILLIS(api_worker));
+    p = safe_snprintf(p, end, "readsb_pf_cpu_background %llu\n", CPU_MILLIS(background));
+    p = safe_snprintf(p, end, "readsb_pf_cpu_demod %llu\n", CPU_MILLIS(demod));
+    p = safe_snprintf(p, end, "readsb_pf_cpu_reader %llu\n", CPU_MILLIS(reader));
+    p = safe_snprintf(p, end, "readsb_pf_cpu_aircraft_json %llu\n", CPU_MILLIS(aircraft_json));
+    p = safe_snprintf(p, end, "readsb_pf_cpu_globe_json %llu\n", CPU_MILLIS(globe_json));
+    p = safe_snprintf(p, end, "readsb_pf_cpu_binCraft %llu\n", CPU_MILLIS(bin));
+    p = safe_snprintf(p, end, "readsb_pf_cpu_heatmap_and_state %llu\n", CPU_MILLIS(heatmap_and_state));
+    p = safe_snprintf(p, end, "readsb_pf_cpu_remove_stale %llu\n", CPU_MILLIS(remove_stale));
+    p = safe_snprintf(p, end, "readsb_pf_cpu_trace_json %llu\n", trace_json_cpu_millis_sum);
+    p = safe_snprintf(p, end, "readsb_pf_cpu_api_update %llu\n", CPU_MILLIS(api_update));
+    p = safe_snprintf(p, end, "readsb_pf_cpu_api_workers %llu\n", CPU_MILLIS(api_worker));
 #undef CPU_MILLIS
 
-    p = safe_snprintf(p, end, "readsb_api_request_count %llu\n", (unsigned long long) st->api_request_count);
-    p = safe_snprintf(p, end, "readsb_tracewrites_recent %u\n", st->recentTraceWrites);
-    p = safe_snprintf(p, end, "readsb_tracewrites_full %u\n", st->fullTraceWrites);
-    p = safe_snprintf(p, end, "readsb_tracewrites_perm %u\n", st->permTraceWrites);
-    p = safe_snprintf(p, end, "readsb_tracewrites_cycle_duration %lld\n", (long long) Modes.writeTracesActualDuration);
+    p = safe_snprintf(p, end, "readsb_pf_api_request_count %llu\n", (unsigned long long) st->api_request_count);
+    p = safe_snprintf(p, end, "readsb_pf_tracewrites_recent %u\n", st->recentTraceWrites);
+    p = safe_snprintf(p, end, "readsb_pf_tracewrites_full %u\n", st->fullTraceWrites);
+    p = safe_snprintf(p, end, "readsb_pf_tracewrites_perm %u\n", st->permTraceWrites);
+    p = safe_snprintf(p, end, "readsb_pf_tracewrites_cycle_duration %lld\n", (long long) Modes.writeTracesActualDuration);
 
 
-    p = safe_snprintf(p, end, "readsb_distance_max %u\n", (uint32_t) st->distance_max);
+    p = safe_snprintf(p, end, "readsb_pf_distance_max %u\n", (uint32_t) st->distance_max);
     if (st->distance_min < 1E42)
-        p = safe_snprintf(p, end, "readsb_distance_min %u\n", (uint32_t) st->distance_min);
+        p = safe_snprintf(p, end, "readsb_pf_distance_min %u\n", (uint32_t) st->distance_min);
     else
-        p = safe_snprintf(p, end, "readsb_distance_min 0\n");
+        p = safe_snprintf(p, end, "readsb_pf_distance_min 0\n");
 
-    p = safe_snprintf(p, end, "readsb_messages_valid %u\n", st->messages_total);
-    p = safe_snprintf(p, end, "readsb_messages_invalid %u\n",
+    p = safe_snprintf(p, end, "readsb_pf_messages_valid %u\n", st->messages_total);
+    p = safe_snprintf(p, end, "readsb_pf_messages_invalid %u\n",
             st->remote_received_basestation_invalid +
             st->remote_rejected_bad + st->demod_rejected_bad +
             st->remote_rejected_unknown_icao + st->demod_rejected_unknown_icao);
 
-    p = safe_snprintf(p, end, "readsb_messages_modes_valid %u\n", st->remote_accepted[0] + st->demod_accepted[0]);
-    p = safe_snprintf(p, end, "readsb_messages_modes_valid_fixed_bit %u\n", st->remote_accepted[1] + st->demod_accepted[1]);
-    p = safe_snprintf(p, end, "readsb_messages_modes_invalid_bad %u\n", st->remote_rejected_bad + st->demod_rejected_bad);
-    p = safe_snprintf(p, end, "readsb_messages_modes_invalid_unknown_icao %u\n", st->remote_rejected_unknown_icao + st->demod_rejected_unknown_icao);
-    p = safe_snprintf(p, end, "readsb_messages_modes_rejected_delayed %u\n", st->remote_rejected_delayed);
+    p = safe_snprintf(p, end, "readsb_pf_messages_modes_valid %u\n", st->remote_accepted[0] + st->demod_accepted[0]);
+    p = safe_snprintf(p, end, "readsb_pf_messages_modes_valid_fixed_bit %u\n", st->remote_accepted[1] + st->demod_accepted[1]);
+    p = safe_snprintf(p, end, "readsb_pf_messages_modes_invalid_bad %u\n", st->remote_rejected_bad + st->demod_rejected_bad);
+    p = safe_snprintf(p, end, "readsb_pf_messages_modes_invalid_unknown_icao %u\n", st->remote_rejected_unknown_icao + st->demod_rejected_unknown_icao);
+    p = safe_snprintf(p, end, "readsb_pf_messages_modes_rejected_delayed %u\n", st->remote_rejected_delayed);
 
-    p = safe_snprintf(p, end, "readsb_messages_basestation_valid %u\n", st->remote_received_basestation_valid);
-    p = safe_snprintf(p, end, "readsb_messages_basestation_invalid %u\n", st->remote_received_basestation_invalid);
+    p = safe_snprintf(p, end, "readsb_pf_messages_basestation_valid %u\n", st->remote_received_basestation_valid);
+    p = safe_snprintf(p, end, "readsb_pf_messages_basestation_invalid %u\n", st->remote_received_basestation_invalid);
 
-    p = safe_snprintf(p, end, "readsb_messages_modeac_valid %u\n", st->remote_received_modeac + st->demod_modeac);
+    p = safe_snprintf(p, end, "readsb_pf_messages_modeac_valid %u\n", st->remote_received_modeac + st->demod_modeac);
 
-    p = safe_snprintf(p, end, "readsb_network_bytes_in %lu\n", (long) st->network_bytes_in);
-    p = safe_snprintf(p, end, "readsb_network_bytes_out %lu\n", (long) st->network_bytes_out);
-    p = safe_snprintf(p, end, "readsb_network_malformed_beast_bytes %u\n", st->remote_malformed_beast);
+    p = safe_snprintf(p, end, "readsb_pf_network_bytes_in %lu\n", (long) st->network_bytes_in);
+    p = safe_snprintf(p, end, "readsb_pf_network_bytes_out %lu\n", (long) st->network_bytes_out);
+    p = safe_snprintf(p, end, "readsb_pf_network_malformed_beast_bytes %u\n", st->remote_malformed_beast);
 
     if (Modes.ping) {
         float bucketsize = PING_BUCKETBASE;
@@ -839,18 +839,18 @@ struct char_buffer generatePromFile(int64_t now) {
             bucketmax += bucketsize;
             bucketmax = nearbyint(bucketmax / 10) * 10;
             bucketsize *= PING_BUCKETMULT;
-            p = safe_snprintf(p, end, "readsb_network_packets_rtt_%d %u\n", (int) bucketmax, st->remote_ping_rtt[i]);
+            p = safe_snprintf(p, end, "readsb_pf_network_packets_rtt_%d %u\n", (int) bucketmax, st->remote_ping_rtt[i]);
         }
     }
 
-    p = safe_snprintf(p, end, "readsb_tracks_all %u\n", st->unique_aircraft);
-    p = safe_snprintf(p, end, "readsb_tracks_single_message %u\n", st->single_message_aircraft);
+    p = safe_snprintf(p, end, "readsb_pf_tracks_all %u\n", st->unique_aircraft);
+    p = safe_snprintf(p, end, "readsb_pf_tracks_single_message %u\n", st->single_message_aircraft);
 
-    p = safe_snprintf(p, end, "readsb_position_count_total %u\n", st->pos_all);
-    p = safe_snprintf(p, end, "readsb_position_count_duplicate %u\n", st->pos_duplicate);
-    p = safe_snprintf(p, end, "readsb_position_count_garbage %u\n", st->pos_garbage);
+    p = safe_snprintf(p, end, "readsb_pf_position_count_total %u\n", st->pos_all);
+    p = safe_snprintf(p, end, "readsb_pf_position_count_duplicate %u\n", st->pos_duplicate);
+    p = safe_snprintf(p, end, "readsb_pf_position_count_garbage %u\n", st->pos_garbage);
     for (int i = 0; i < NUM_TYPES; i++) {
-        p = safe_snprintf(p, end, "readsb_position_count_%s %u\n", addrtype_enum_string(i), st->pos_by_type[i]);
+        p = safe_snprintf(p, end, "readsb_pf_position_count_%s %u\n", addrtype_enum_string(i), st->pos_by_type[i]);
     }
 
 
@@ -860,50 +860,50 @@ struct char_buffer generatePromFile(int64_t now) {
         if (con->connected) {
             value = (now - con->lastConnect) / 1000.0;
         }
-        p = safe_snprintf(p, end, "readsb_net_connector_status{host=\"%s\",port=\"%s\"} %"PRIu64"\n",
+        p = safe_snprintf(p, end, "readsb_pf_net_connector_status{host=\"%s\",port=\"%s\"} %"PRIu64"\n",
                 con->address, con->port, value);
     }
 
     if (Modes.sdr_type != SDR_NONE) {
         if (!Modes.net_only) {
-            p = safe_snprintf(p, end, "readsb_sdr_gain %.1f\n", Modes.gain / 10.0);
+            p = safe_snprintf(p, end, "readsb_pf_sdr_gain %.1f\n", Modes.gain / 10.0);
         }
 
         if (st->signal_power_sum > 0 && st->signal_power_count > 0)
-            p = safe_snprintf(p, end, "readsb_signal_avg %.1f\n", 10 * log10(st->signal_power_sum / st->signal_power_count));
+            p = safe_snprintf(p, end, "readsb_pf_signal_avg %.1f\n", 10 * log10(st->signal_power_sum / st->signal_power_count));
         else
-            p = safe_snprintf(p, end, "readsb_signal_avg -50.0\n");
+            p = safe_snprintf(p, end, "readsb_pf_signal_avg -50.0\n");
         if (st->noise_power_sum > 0 && st->noise_power_count > 0)
-            p = safe_snprintf(p, end, "readsb_signal_noise %.1f\n", 10 * log10(st->noise_power_sum / st->noise_power_count));
+            p = safe_snprintf(p, end, "readsb_pf_signal_noise %.1f\n", 10 * log10(st->noise_power_sum / st->noise_power_count));
         else
-            p = safe_snprintf(p, end, "readsb_signal_noise -50.0\n");
+            p = safe_snprintf(p, end, "readsb_pf_signal_noise -50.0\n");
         if (st->peak_signal_power > 0)
-            p = safe_snprintf(p, end, "readsb_signal_peak %.1f\n", 10 * log10(st->peak_signal_power));
+            p = safe_snprintf(p, end, "readsb_pf_signal_peak %.1f\n", 10 * log10(st->peak_signal_power));
         else
-            p = safe_snprintf(p, end, "readsb_signal_peak -50.0\n");
+            p = safe_snprintf(p, end, "readsb_pf_signal_peak -50.0\n");
 
-        p = safe_snprintf(p, end, "readsb_signal_strong %d\n", st->strong_signal_count);
+        p = safe_snprintf(p, end, "readsb_pf_signal_strong %d\n", st->strong_signal_count);
 
         if (!Modes.net_only) {
-            p = safe_snprintf(p, end, "readsb_demod_samples_processed %"PRIu64"\n", st->samples_processed);
-            p = safe_snprintf(p, end, "readsb_demod_samples_dropped %"PRIu64"\n", st->samples_dropped);
-            p = safe_snprintf(p, end, "readsb_demod_samples_lost %"PRIu64"\n", st->samples_lost);
-            p = safe_snprintf(p, end, "readsb_demod_estimated_ppm %.1f\n", Modes.estimated_ppm);
+            p = safe_snprintf(p, end, "readsb_pf_demod_samples_processed %"PRIu64"\n", st->samples_processed);
+            p = safe_snprintf(p, end, "readsb_pf_demod_samples_dropped %"PRIu64"\n", st->samples_dropped);
+            p = safe_snprintf(p, end, "readsb_pf_demod_samples_lost %"PRIu64"\n", st->samples_lost);
+            p = safe_snprintf(p, end, "readsb_pf_demod_estimated_ppm %.1f\n", Modes.estimated_ppm);
 
-            p = safe_snprintf(p, end, "readsb_demod_preambles %"PRIu32"\n", st->demod_preambles);
+            p = safe_snprintf(p, end, "readsb_pf_demod_preambles %"PRIu32"\n", st->demod_preambles);
         }
     }
 
 
-    p = safe_snprintf(p, end, "readsb_mem_aircraft_count %d\n", Modes.total_aircraft_count);
-    p = safe_snprintf(p, end, "readsb_mem_aircraft_alloc %"PRIu64"\n", Modes.aircraft_data_size);
+    p = safe_snprintf(p, end, "readsb_pf_mem_aircraft_count %d\n", Modes.total_aircraft_count);
+    p = safe_snprintf(p, end, "readsb_pf_mem_aircraft_alloc %"PRIu64"\n", Modes.aircraft_data_size);
     if (Modes.keep_traces) {
-        p = safe_snprintf(p, end, "readsb_trace_current_memory %"PRIu64"\n", Modes.trace_current_size);
-        p = safe_snprintf(p, end, "readsb_trace_chunk_memory %"PRIu64"\n", Modes.trace_chunk_size);
-        p = safe_snprintf(p, end, "readsb_trace_cache_memory %"PRIu64"\n", Modes.trace_cache_size);
-        p = safe_snprintf(p, end, "readsb_trace_last_memory %"PRIu64"\n", Modes.trace_last_size);
+        p = safe_snprintf(p, end, "readsb_pf_trace_current_memory %"PRIu64"\n", Modes.trace_current_size);
+        p = safe_snprintf(p, end, "readsb_pf_trace_chunk_memory %"PRIu64"\n", Modes.trace_chunk_size);
+        p = safe_snprintf(p, end, "readsb_pf_trace_cache_memory %"PRIu64"\n", Modes.trace_cache_size);
+        p = safe_snprintf(p, end, "readsb_pf_trace_last_memory %"PRIu64"\n", Modes.trace_last_size);
     }
-    p = safe_snprintf(p, end, "readsb_uptime %"PRIu64"\n", getUptime());
+    p = safe_snprintf(p, end, "readsb_pf_uptime %"PRIu64"\n", getUptime());
 
     if (p >= end)
         fprintf(stderr, "buffer overrun stats prom\n");

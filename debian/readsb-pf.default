@@ -1,0 +1,8 @@
+# readsb-pf configuration
+# This is sourced by readsb-pf.service as
+# daemon startup configuration.
+
+RECEIVER_OPTIONS="--device 0 --device-type rtlsdr --gain auto --ppm 0"
+DECODER_OPTIONS="--max-range 450 --write-json-every 1"
+NET_OPTIONS="--net --net-ri-port 31001 --net-ro-port 31002 --net-sbs-port 31003 --net-bi-port 31004,31104 --net-bo-port 31005"
+JSON_OPTIONS="--json-location-accuracy 2 --range-outline-hours 24"

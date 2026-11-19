@@ -9,7 +9,7 @@ git add version
 
 # use this and the actual changelog from the main directory
 cat - changelog > debian/changelog <<EOF
-readsb ($VERSION) UNRELEASED; urgency=medium
+readsb-pf ($VERSION) UNRELEASED; urgency=medium
 
   * In development
 

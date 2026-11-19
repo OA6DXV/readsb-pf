@@ -21,10 +21,10 @@ set -e
 
 case "$1" in
     purge)
-        rm -f /etc/default/readsb
-        deluser readsb plugdev
-        deluser readsb dialout
-        deluser readsb
+        rm -f /etc/default/readsb-pf
+        deluser readsb-pf plugdev
+        deluser readsb-pf dialout
+        deluser readsb-pf
         ;;
 
     remove)

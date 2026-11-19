@@ -1812,7 +1812,7 @@ struct char_buffer generateTraceJson(struct aircraft *a, traceBuffer tb, int typ
         }
     }
 
-    p = safe_snprintf(p, bufEnd, ",\n\"version\": \"readsb "READSB_SHORT_VERSION" "READSB_SHORT_COMMIT"\"");
+    p = safe_snprintf(p, bufEnd, ",\n\"version\": \"" MODES_READSB_VARIANT " " READSB_SHORT_VERSION" "READSB_SHORT_COMMIT"\"");
 
     p = safe_snprintf(p, bufEnd, ",\n\"timestamp\": %.3f", referenceTs / 1000.0);
 
@@ -1972,7 +1972,7 @@ struct char_buffer generateReceiverJson() {
     if (Modes.trace_hist_only) {
         p = safe_snprintf(p, end, ", \"trace_hist_only\": true");
     }
-    p = safe_snprintf(p, end, ", \"version\": \"%s\" }\n", MODES_READSB_VERSION);
+    p = safe_snprintf(p, end, ", \"version\": \"%s %s\" }\n", MODES_READSB_VARIANT, MODES_READSB_VERSION);
 
     if (p >= end)
         fprintf(stderr, "buffer overrun receiver json\n");
@@ -2033,7 +2033,7 @@ static inline __attribute__((always_inline)) struct char_buffer writeJsonTo (con
     } else {
         snprintf(pathbuf, PATH_MAX, "%s", file);
     }
-    snprintf(tmppath, PATH_MAX, "%s.readsb_tmp", pathbuf);
+    snprintf(tmppath, PATH_MAX, "%s.readsb-pf_tmp", pathbuf);
 
     int firstOpenFail = 1;
 open:

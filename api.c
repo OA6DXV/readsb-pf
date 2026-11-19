@@ -1127,7 +1127,7 @@ static void sendStatus(int fd, int keepalive, const char *http_status) {
 
     p = safe_snprintf(p, end,
     "HTTP/1.1 %s\r\n"
-    "Server: readsb/wiedehopf\r\n"
+    "Server: " MODES_READSB_VARIANT "\r\n"
     "Connection: %s\r\n"
     "Cache-control: no-store\r\n"
     "Content-length: 0\r\n\r\n",
@@ -1778,14 +1778,14 @@ static void apiReadRequest(struct apiCon *con, struct apiThread *thread) {
 
     p = safe_snprintf(p, end,
             "HTTP/1.1 200 OK\r\n"
-            "Server: readsb/wiedehopf\r\n"
+            "Server: " MODES_READSB_VARIANT "\r\n"
             "%s"
             "Content-Type: %s\r\n"
             "Connection: %s\r\n"
             "Cache-Control: no-store\r\n"
             "%s"
             "Content-Length: %d\r\n\r\n",
-            con->include_version ? "readsb_version: "MODES_READSB_VERSION"\r\n" : "",
+            con->include_version ? MODES_READSB_VARIANT "-version: " MODES_READSB_VERSION"\r\n" : "",
             con->content_type,
             con->keepalive ? "keep-alive" : "close",
             options->zstd_encode ? "Content-Encoding: zstd\r\n" : "",

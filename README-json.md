@@ -1,15 +1,15 @@
 # JSON output formats
 
-readsb generates several json files with informaton about the receiver itself, currently known aircraft,
+readsb-pf generates several json files with informaton about the receiver itself, currently known aircraft,
 and general statistics. These are used by the webmap, but could also be used by other things feeds stats
-about readsb operation to collectd for later graphing.
+about readsb-pf operation to collectd for later graphing.
 
 ## Reading the json files
 
 There are two ways to obtain the json files:
 
- * By HTTP from the external webserver that readsb is feeding. The json is served from the data/ path, e.g. http://somehost/tar1090/data/aircraft.json when installed with tar1090
- * As a file in the directory specified by --write-json on readsb command line (by default /run/readsb)
+ * By HTTP from the external webserver that readsb-pf is feeding. The json is served from the data/ path, e.g. http://somehost/tar1090/data/aircraft.json when installed with tar1090
+ * As a file in the directory specified by --write-json on readsb-pf command line (by default /run/readsb-pf)
 
 The HTTP versions are always up to date.
 The file versions are written periodically; for aircraft, typically once a second, for stats, once a minute.
@@ -19,10 +19,10 @@ Each file contains a single JSON object. The file formats are:
 
 ## receiver.json
 
-This file has general metadata about readsb. It does not change often and you probably just want to read it once at startup.
+This file has general metadata about readsb-pf. It does not change often and you probably just want to read it once at startup.
 The keys are:
 
- * version: the version of readsb in use
+ * version: the version of readsb-pf in use
  * refresh: how often aircraft.json is updated (for the file version), in milliseconds. the webmap uses this to control its refresh interval.
  * lat: the latitude of the receiver in decimal degrees. Optional, may not be present.
  * lon: the longitude of the receiver in decimal degrees. Optional, may not be present.
@@ -33,7 +33,7 @@ The keys are:
 - aircraft.json contains recently seen aircraft. The keys are:
 
  * now: the time this file was generated, in seconds since Jan 1 1970 00:00:00 GMT (the Unix epoch).
- * messages: the total number of Mode S messages processed since readsb started.
+ * messages: the total number of Mode S messages processed since readsb-pf started.
  * aircraft: an array of JSON objects, one per known aircraft. Each aircraft has the following keys. Keys will be omitted if data is not available.
    * hex: the 24-bit ICAO identifier of the aircraft, as 6 hex digits. The identifier may start with '~', this means that the address is a non-ICAO address (e.g. from TIS-B).
    * type: type of underlying messages / best source of current data for this position / aircraft:
@@ -115,7 +115,7 @@ The keys are:
       LADD = dbFlags & 8;
    ```
 
-   * lastPosition: {lat, lon, nic, rc, seen_pos} when the regular lat and lon are older than 60 seconds they are no longer considered valid, this will provide the last position and show the age for the last position. aircraft will only be in the aircraft json if a messages has been received in the last 60 seconds, longer for the jaero input, see readsb --help.
+   * lastPosition: {lat, lon, nic, rc, seen_pos} when the regular lat and lon are older than 60 seconds they are no longer considered valid, this will provide the last position and show the age for the last position. aircraft will only be in the aircraft json if a messages has been received in the last 60 seconds, longer for the jaero input, see readsb-pf --help.
 
   * rr_lat, rr_lon: If no ADS-B or MLAT position available, a rough estimated position for the aircraft based on the receiver’s estimated coordinates. (If used with multiple receivers / as an aggregation server with --net-ingest --net-receiver-id)
 
@@ -268,11 +268,11 @@ Example :
 
 ## stats.json
 
-This file contains statistics about readsb operations.
+This file contains statistics about readsb-pf operations.
 
 There are 5 top level keys: "latest", "last1min", "last5min", "last15min", "total". Each key has statistics for a different period, defined by the "start" and "end" subkeys:
 
- * "total" covers the entire period from when readsb was started up to the current time
+ * "total" covers the entire period from when readsb-pf was started up to the current time
  * "last1min" covers a recent 1-minute period. This may be up to 1 minute out of date (i.e. "end" may be up to 1 minute old).
  * "last5min" covers a recent 5-minute period. As above, this may be up to 1 minute out of date.
  * "last15min" covers a recent 15-minute period. As above, this may be up to 1 minute out of date.
@@ -326,7 +326,7 @@ Each period has the following subkeys:
    as a new track.
    * all: total tracks created
    * single_message: tracks consisting of only a single message. These are usually due to message decoding errors that produce a bad aircraft address.
- * messages: total number of messages accepted by readsb from any source
+ * messages: total number of messages accepted by readsb-pf from any source
 
 ## minimal example on how to use python to process aircraft.json:
 

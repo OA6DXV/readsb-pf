@@ -1118,7 +1118,7 @@ static int load_aircraft(char **p, char *end, int64_t now, threadpool_buffer_t *
             a->trace_write |= (WRECENT | WPERM | WMEM);
         }
 
-        // write traces into /run/readsb so they are present for the webinterface
+        // write traces into /run/readsb-pf so they are present for the webinterface
         if (a->pos_reliable_valid.source != SOURCE_INVALID || now - a->seenPosReliable < 15 * MINUTES) {
             // write these trace immediately
             a->trace_writeCounter = 0xc0ffee;
@@ -3077,7 +3077,7 @@ void save_blob(int blob, threadpool_buffer_t *pbuffer1, threadpool_buffer_t *pbu
     } else {
         snprintf(filename, 1024, "%s/blob_%02x", stateDir, blob);
     }
-    snprintf(tmppath, PATH_MAX, "%s.readsb_tmp", filename);
+    snprintf(tmppath, PATH_MAX, "%s.readsb-pf_tmp", filename);
 
     int fd = open(tmppath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fd < 0) {
@@ -3593,7 +3593,7 @@ int handleHeatmap(int64_t now) {
     mkdir_error(pathbuf, 0755, stderr);
 
     snprintf(pathbuf, PATH_MAX, "%s/heatmap/%02d.bin.ttf", dateDir, half_hour);
-    snprintf(tmppath, PATH_MAX, "%s.readsb_tmp", pathbuf);
+    snprintf(tmppath, PATH_MAX, "%s.readsb-pf_tmp", pathbuf);
 
     //fprintf(stderr, "%s using %d positions\n", pathbuf, len);
 

@@ -9,11 +9,11 @@ set -e
 
 # source
 SHOST=box1
-SDIR=/var/globe_history/internal_state
+SDIR=/var/lib/readsb-pf/globe_history/internal_state
 
 # target
 THOST=box2
-TDIR=/var/globe_history/internal_state
+TDIR=/var/lib/readsb-pf/globe_history/internal_state
 
 echo "$(date -u --rfc-3339=s) starting transfer from $SHOST to $THOST"
 
@@ -56,7 +56,7 @@ wait # wait for last transfer
 
 echo "$(date -u --rfc-3339=s) transfer done, waiting for completion of state load on the target side"
 $TCMD "while ls $RDIR | grep -qs -v -e tmp; do sleep 1; done"
-$TCMD "if ls $RDIR | grep -qs ${suffix}; then echo transfer or state loading incomplete, check target readsb log; else echo $(date -u --rfc-3339=s) state loading completed on target; fi"
+$TCMD "if ls $RDIR | grep -qs ${suffix}; then echo transfer or state loading incomplete, check target readsb-pf log; else echo $(date -u --rfc-3339=s) state loading completed on target; fi"
 $TCMD "rm -rf $RDIR $TTDIR"
 
 rm -rf "$SSHDIR"

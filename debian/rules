@@ -63,14 +63,14 @@ endif
 
 override_dh_auto_build:
 	make -j$(shell nproc) $(CONFIG_SWITCH)
-	help2man -N --no-discard-stderr ./viewadsb > debian/viewadsb.1
-	help2man -N --no-discard-stderr ./readsb > debian/readsb.1
+	help2man -N --no-discard-stderr ./viewadsb-pf > debian/viewadsb-pf.1
+	help2man -N --no-discard-stderr ./readsb-pf > debian/readsb-pf.1
 
 override_dh_install:
 	dh_install
-	install -d debian/readsb/usr/bin
-	cp -a readsb debian/readsb/usr/bin/readsb
-	ln -s /usr/bin/readsb debian/readsb/usr/bin/viewadsb
+	install -d debian/readsb-pf/usr/bin
+	cp -a readsb-pf debian/readsb-pf/usr/bin/readsb-pf
+	ln -s /usr/bin/readsb-pf debian/readsb-pf/usr/bin/viewadsb-pf
 
 override_dh_installinit:
 	dh_installinit --noscripts
